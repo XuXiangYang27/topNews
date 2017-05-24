@@ -1,0 +1,25 @@
+<html>
+<body>
+<pre>
+hello vm
+##   你看不到我
+#*
+    你这里都看不到
+*#
+$!{value1}
+
+#foreach($color in $colors)
+Color $!{foreach.index}/$!{foreach.count}:$!{color}
+#end
+
+#foreach($key in $map.keySet())
+Number $!{foreach.index}/$!{foreach.count}:$!{key} $map.get($!{key})
+#end
+
+$!{user.username}
+$!{user.getUsername()}
+
+$!{name}
+</pre>
+</body>
+</html>
