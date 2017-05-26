@@ -1,23 +1,62 @@
 package com.xxylth.topNews.model;
 
 /**
- * @author 许湘扬
- * @e-mail 547139255@qq.com
- * @detail
+ * Created by nowcoder on 2016/6/26.
  */
-public class User
-{
-    private String username;
+public class User {
+    private int id;
+    private String name;
+    private String password;
+    private String salt;
+    private String headUrl;
 
-    public String getUsername() {
-        return username;
+    public User() {
+
+    }
+    public User(String name) {
+        this.name = name;
+        this.password = "";
+        this.salt = "";
+        this.headUrl = "";
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getName() {
+        return name;
     }
 
-    public User(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public String getHeadUrl() {
+        return headUrl;
+    }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

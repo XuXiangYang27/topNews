@@ -63,7 +63,6 @@ public class IndexController
         model1.addAttribute("value1","vv1");
         List<String> colors= Arrays.asList(new String[]{"RED","GREEN","BLUE"});
 
-
         Map<String,String> map=new HashMap<>();
         for (int i=0;i<4;i++)
         {
