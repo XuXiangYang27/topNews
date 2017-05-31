@@ -24,7 +24,7 @@ import java.util.*;
  * @e-mail 547139255@qq.com
  * @detail
  */
-@Controller
+//@Controller
 public class IndexController
 {
 
