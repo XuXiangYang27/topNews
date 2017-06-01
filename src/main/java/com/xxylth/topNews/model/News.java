@@ -3,7 +3,7 @@ package com.xxylth.topNews.model;
 import java.util.Date;
 
 /**
- * Created by rainday on 16/6/30.
+ * Created by xxy on 16/6/30.
  */
 public class News {
 

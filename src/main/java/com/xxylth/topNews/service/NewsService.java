@@ -18,6 +18,7 @@ public class NewsService
     @Autowired
     NewsDao newsDao;
 
+
     public List<News> getLastedNews(int userId,int offset,int limit)
     {
         return newsDao.selectByUserIdAndOffset(userId,offset,limit);
