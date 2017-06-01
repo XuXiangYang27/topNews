@@ -22,6 +22,9 @@ public interface NewsDao
 
     List<News> selectByUserIdAndOffset(@Param("userId") int userId,@Param("offset") int offset,
                                        @Param("limit") int limit);
+
+
+
 }
 
 

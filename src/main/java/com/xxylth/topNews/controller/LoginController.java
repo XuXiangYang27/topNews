@@ -1,18 +1,17 @@
 package com.xxylth.topNews.controller;
 
-import com.sun.deploy.net.HttpResponse;
 import com.xxylth.topNews.model.User;
+import com.xxylth.topNews.service.NewsService;
 import com.xxylth.topNews.service.TopNewsService;
-import com.xxylth.topNews.aspect.LogAspect;
+import com.xxylth.topNews.service.UserService;
+import com.xxylth.topNews.util.TopNewsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,21 +23,95 @@ import java.util.*;
  * @e-mail 547139255@qq.com
  * @detail
  */
-//@Controller
-public class IndexController
+@Controller
+public class LoginController
 {
-
     @Autowired
-    private TopNewsService topNewsService;
+    UserService userService;
+    @Autowired
+    NewsService newsService;
+
     private static final Logger LOGGER= LoggerFactory.getLogger(IndexController.class);
-    @RequestMapping(path = {"/","/index"})//设置访问路径
-    @ResponseBody //返回的body部分
-    public String index(HttpSession session)
+
+    @RequestMapping(path = {"/reg/"})//设置访问路径
+    @ResponseBody
+    public String reg(Model model,
+                        @RequestParam("username") String username,
+                        @RequestParam("password") String password,
+                        @RequestParam(value="rember",defaultValue = "0") int rember
+                        )
     {
-        LOGGER.info("Visit index");
-        return "hello topNews"+"<br>"+session.getAttribute("msg")
-                +topNewsService.say()+"<br>";
+        try
+        {
+            System.out.println(username+password);
+            Map<String,Object> map=userService.register(username,password);
+            if (map.isEmpty())
+                return  TopNewsUtil.getJSONString(0,"注册成功");
+            else
+                return  TopNewsUtil.getJSONString(1,map);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("注册异常"+e.getMessage());
+            return TopNewsUtil.getJSONString(1,"注册异常");
+        }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @RequestMapping(path = {"/profile/{groupId}/{userId}"})//方括号里是参数
     @ResponseBody
