@@ -1,5 +1,6 @@
 package com.xxylth.topNews.controller;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.xxylth.topNews.model.User;
 import com.xxylth.topNews.service.NewsService;
 import com.xxylth.topNews.service.TopNewsService;
@@ -38,15 +39,24 @@ public class LoginController
     public String reg(Model model,
                         @RequestParam("username") String username,
                         @RequestParam("password") String password,
-                        @RequestParam(value="rember",defaultValue = "0") int rember
+                        @RequestParam(value="rember",defaultValue = "0") int rember,
+                        HttpServletResponse response
                         )
     {
         try
         {
-            System.out.println(username+password);
-            Map<String,Object> map=userService.register(username,password);
-            if (map.isEmpty())
-                return  TopNewsUtil.getJSONString(0,"注册成功");
+            Map<String,Object> map=userService.register(username,password,rember);
+            if (map.containsKey("ticket"))
+            {
+                System.out.println("ticket");
+                Cookie cookie=new Cookie("ticket",map.get("ticket").toString());
+
+                cookie.setPath("/");//设置cookie全站有效
+                if(rember>0)//如果勾选记住我,cookie设置为5天
+                    cookie.setMaxAge(3600*24*5);
+                response.addCookie(cookie);
+                return TopNewsUtil.getJSONString(0, "注册成功");
+            }
             else
                 return  TopNewsUtil.getJSONString(1,map);
         }
@@ -56,173 +66,72 @@ public class LoginController
             return TopNewsUtil.getJSONString(1,"注册异常");
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @RequestMapping(path = {"/profile/{groupId}/{userId}"})//方括号里是参数
+    @RequestMapping(path = {"/login"})//设置访问路径
     @ResponseBody
-    public String profile(@PathVariable("groupId") String groupId,//路径参数
-                          @PathVariable("userId") int userId,
-                          @RequestParam(value = "type",defaultValue = "1") int type,//请求参数
-                          @RequestParam(value="key",defaultValue = "nowcoder") String key)
+    public String login(Model model,
+                      @RequestParam("username") String username,
+                      @RequestParam("password") String password,
+                      @RequestParam(value="rember",defaultValue = "0") int rember,
+                        HttpServletResponse response
+    )
     {
-        //演示获取访问路径里的 路径与请求参数
-        return String.format("GID{%s},UID{%d},Type{%d},Key{%s}",groupId,userId,type,key);
-    }
-    /**
-     * 使用模板
-     * @param model1
-     * @param name
-     * @return
-     */
-    @RequestMapping(value = "/vm")
-    public String news(Model model1,//Model对象用于给模板传数据
-                       @RequestParam(value = "name",defaultValue = "xxy") String name)
-    {
-        model1.addAttribute("value1","vv1");
-        List<String> colors= Arrays.asList(new String[]{"RED","GREEN","BLUE"});
-
-        Map<String,String> map=new HashMap<>();
-        for (int i=0;i<4;i++)
+        try
         {
-            map.put(String.valueOf(i),String.valueOf(i*i));
-        }
-        model1.addAttribute("map",map);
-        model1.addAttribute("colors",colors);
-        model1.addAttribute("user",new User("许湘扬"));
-        model1.addAttribute("name",name);
-        return "news";
-    }
 
-    /**
-     * 演示操作request对象
-     * @param request
-     * @param response
-     * @param session
-     * @return
-     */
-    @RequestMapping(path ={"/request"})
-    @ResponseBody
-    public String request(HttpServletRequest request,
-                          HttpServletResponse response,
-                          HttpSession session)
-    {
-        StringBuilder sb=new StringBuilder();
-        Enumeration<String > headerNames=request.getHeaderNames();
-        while (headerNames.hasMoreElements())
+            Map<String,Object> map=userService.login(username,password, rember);
+
+            //账号密码正确,就会有ticket
+            if (map.containsKey("ticket"))
+            {
+
+                Cookie cookie=new Cookie("ticket",map.get("ticket").toString());
+                System.out.println(username);
+                System.out.println(password);
+                System.out.println(rember);
+                cookie.setPath("/");//设置cookie全站有效
+                if(rember>0)//如果勾选记住我,cookie设置为5天
+                    cookie.setMaxAge(3600*24*5);
+                response.addCookie(cookie);
+                return TopNewsUtil.getJSONString(0, "登录成功");
+            }
+            else
+                return  TopNewsUtil.getJSONString(1,map);
+        }
+        catch (Exception e)
         {
-            String name=headerNames.nextElement();
-            sb.append(name+":"+request.getHeader(name)+"<br/>");
+            LOGGER.error("登录异常"+e.getMessage());
+            return TopNewsUtil.getJSONString(1,"登录异常");
         }
-        return sb.toString();
     }
 
-    /**
-     * 演示操作response对象(请求头设置与cookie设置)
-     * @param nowcoderID
-     * @param key
-     * @param value
-     * @param response
-     * @return
-     */
-    @RequestMapping(path ={"/response"})
-    @ResponseBody
-    public String response(@CookieValue(value = "nowcoderID",defaultValue = "001") String nowcoderID,
-                           @RequestParam(value = "key" ,defaultValue = "key") String key,
-                           @RequestParam(value = "value" ,defaultValue = "value") String value,
-                           HttpServletResponse response)
+    @RequestMapping(path = {"/logout/"})//设置访问路径
+    public String logout(@CookieValue("ticket") String ticket)
     {
-        response.addCookie(new Cookie(key,value));
-        response.addHeader(key,value);
-        return "NowCoderId From Cookie:"+nowcoderID;
-    }
+        userService.logout(ticket);
 
-    @RequestMapping(path = "/redirect/{code}")
-    public String redirect(@PathVariable("code") int code,
-                           HttpSession session)
-    {
-        /*
-        RedirectView red=new RedirectView("/",true);
-        if (code==301)
-            red.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
-
-        return red;*/
-        session.setAttribute("msg","jump from redirect");
-        return "redirect:/";
-    }
-
-    @RequestMapping("/admin")
-    @ResponseBody
-    public String admin(@RequestParam(value = "key",required = false) String key)
-    {
-        if("admin".equals(key))
-            return "hello admin";
-        throw  new IllegalArgumentException("Key 错误");
-    }
-
-    /**
-     * 统一处理页面错误
-     * @param e
-     * @return
-     */
-    @ExceptionHandler()
-    @ResponseBody
-    public String error(Exception e)
-    {
-        return "error : "+e.getMessage();
+        return "redirect:/";//退出登录 跳转到首页
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

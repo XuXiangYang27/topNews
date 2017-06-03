@@ -20,9 +20,9 @@ public interface NewsDao
             "(",INSERT_FIELDS,") values (#{title},#{link},#{image},#{likeCount},#{commentCount},#{createdDate},#{userId})"})
     int addNews(News news);
 
-    List<News> selectByUserIdAndOffset(@Param("userId") int userId,@Param("offset") int offset,
+    List<News> selectByUserIdAndOffset(@Param("userId") int userId,
+                                       @Param("offset") int offset,
                                        @Param("limit") int limit);
-
 
 
 }

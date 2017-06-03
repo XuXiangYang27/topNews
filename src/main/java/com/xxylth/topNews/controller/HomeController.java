@@ -1,5 +1,6 @@
 package com.xxylth.topNews.controller;
 import com.xxylth.topNews.dao.UserDao;
+import com.xxylth.topNews.model.HostHolder;
 import com.xxylth.topNews.model.News;
 import com.xxylth.topNews.model.ViewObject;
 import com.xxylth.topNews.service.NewsService;
@@ -29,6 +30,10 @@ public class HomeController
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    HostHolder hostHolder;
+
 
     private List<ViewObject> getNews(int userId,int offset,int limit)
     {

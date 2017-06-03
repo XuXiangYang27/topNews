@@ -1,7 +1,9 @@
 package com.xxylth.topNews;
 
+import com.xxylth.topNews.dao.LoginTicketDao;
 import com.xxylth.topNews.dao.NewsDao;
 import com.xxylth.topNews.dao.UserDao;
+import com.xxylth.topNews.model.LoginTicket;
 import com.xxylth.topNews.model.News;
 import com.xxylth.topNews.model.User;
 import org.junit.Assert;
@@ -25,9 +27,12 @@ public class InitDatabaseTests
 
 	@Autowired
 	UserDao userDao;
-
 	@Autowired
 	NewsDao newsDao;
+	@Autowired
+	LoginTicketDao loginTicketDao;
+
+
 	@Test
 	public void initData()
 	{
@@ -38,12 +43,10 @@ public class InitDatabaseTests
 			user.setHeadUrl(String.format("http://images.nowcoder.com/head/%dt.png",
 					random.nextInt(1000)));
 			user.setName(String.format("USER%d",i));
-			user.setPassword("");
+			user.setPassword("pwdTest");
 			user.setSalt("");
 			userDao.addUser(user);
 
-			user.setPassword("newpassword");
-			userDao.updatePassword(user);
 
 			Date date=new Date();
 			News news=new News();
@@ -57,11 +60,30 @@ public class InitDatabaseTests
 			news.setTitle(String.format("TITLE{%d}",i));
 			news.setLink(String.format("http://www.nowcoder.com/%d.html",i));
 			newsDao.addNews(news);
-		}
 
+			LoginTicket ticket=new LoginTicket();
+			ticket.setStatus(0);
+			ticket.setUserId(i+1);
+			ticket.setExpired(date);
+			ticket.setTicket(String.format("TICKET%d",i+1));
+			loginTicketDao.addTicket(ticket);
+
+		}
+		LoginTicket ticket;
+		ticket=loginTicketDao.selectByTicket("TICKET2");
+		loginTicketDao.updateStatus(ticket.getTicket(),2);
+
+
+		User user=userDao.selectById(1);
+		user.setPassword("newpassword");
+		userDao.updatePassword(user);
 		Assert.assertEquals("newpassword",userDao.selectById(1).getPassword());
 		userDao.deleteById(1);
 		Assert.assertNull(userDao.selectById(1));
+
+
+
+
 	}
 }
 
