@@ -26,7 +26,14 @@
 
 	<dependencies>
 
-		<!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+
+		<!-- spring-boot-devtools   -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+
+		</dependency>
+		<!-- 阿里巴巴:fastjson -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>

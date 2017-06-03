@@ -12,11 +12,37 @@ import java.util.Map;
 /**
  * @author 许湘扬
  * @e-mail 547139255@qq.com
- * @detail
+ * @detail 本项目的工具
  */
 public class TopNewsUtil
 {
     private static final Logger logger = LoggerFactory.getLogger(TopNewsUtil.class);
+
+    //允许的图片后缀类型
+    public static String[] IMAGE_FILE_EXT=new String[]{"png","bmp","jpg","jpeg"};
+    //项目域名
+    public static final String TOPNEWS_DOMAIN="http://127.0.0.1:8080/";
+
+    public static final String IMAGE_DIR="/Users/XXY/TopNews_image/";
+
+
+
+     /**
+     * 判断文件后缀名是否合法
+     *
+     * @param fileExt
+     * @return
+     */
+    public static  boolean isFileAllowed(String fileExt)
+    {
+        for(String ext:IMAGE_FILE_EXT)
+        {
+            if (fileExt.equals(fileExt))
+                return true;
+        }
+        return false;
+    }
+
 
     //生成json串
     public static String getJSONString(int code)
@@ -50,7 +76,12 @@ public class TopNewsUtil
         return json.toJSONString();
     }
 
-    //MD5加密
+    /**
+     * MD5加密
+     *
+     * @param key //需要加密的字符串
+     * @return //MD5加密后字符串
+     */
     public static String MD5(String key)
     {
         char hexDigits[] = {

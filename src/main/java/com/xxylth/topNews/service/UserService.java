@@ -57,7 +57,7 @@ public class UserService
         User user=userDao.selectByName(username);
         if(user!=null)
         {
-            map.put("msgname", "用户名已经被注册");
+            map.put("msgname", "用户名已经被注册!!!");
             return  map;
         }
         //设置用户信息
