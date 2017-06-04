@@ -28,6 +28,17 @@ public class NewsService
     //保存上传图片的本地目录
     public static String IMAGE_DIR="/Users/XXY/TopNews_image/";
 
+
+    /**
+     * 添加一条新的新闻
+     *
+     * @param news //新闻bean
+     * @return
+     */
+    public int addNews(News news) {
+        newsDao.addNews(news);
+        return news.getId();
+    }
     /**
      * 查询新闻
      * @param userId  //用户ID,为0时代表所有用户,其他值是为单个用户

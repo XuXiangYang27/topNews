@@ -33,8 +33,6 @@ public class PassportIntercepter implements HandlerInterceptor
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception
     {
-
-        System.out.println("-------拦截器---------");
         //一 判断客户端是否有名为ticket的cookie
         //1获取所有的cookie
         String ticket=null;

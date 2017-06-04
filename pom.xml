@@ -27,6 +27,14 @@
 	<dependencies>
 
 
+		<!--七牛云存储-->
+		<dependency>
+			<groupId>com.qiniu</groupId>
+			<artifactId>qiniu-java-sdk</artifactId>
+			<version>7.2.0</version>
+		</dependency>
+
+
 		<!-- spring-boot-devtools   -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

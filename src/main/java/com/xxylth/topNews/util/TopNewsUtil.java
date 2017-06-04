@@ -25,7 +25,7 @@ public class TopNewsUtil
 
     public static final String IMAGE_DIR="/Users/XXY/TopNews_image/";
 
-
+    public static final String QINIU_DOMAIN_prefix="http://oqyxae05r.bkt.clouddn.com/";
 
      /**
      * 判断文件后缀名是否合法
