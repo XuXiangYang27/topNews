@@ -15,6 +15,6 @@
             WHERE user_id = #{userId}
         </if>
         ORDER BY created_date DESC
-        <!--LIMIT #{offset},#{limit}-->
+        LIMIT #{offset},#{limit}
     </select>
 </mapper>

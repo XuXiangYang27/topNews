@@ -20,6 +20,18 @@ public class CommentService
 
 
     /**
+     * 删除评论(把status改成1)
+     *
+     * @param entityId   //实体ID
+     * @param entityType //实体类型
+     * @return //是否修改成功
+     */
+    public int deleteComment(int entityId,int entityType)
+    {
+        return commentDao.updateStatus(entityId,entityType,1);
+    }
+
+    /**
      * 返回指定实体的记录
      * @param entityId    //实体ID
      * @param entityType  //实体类型

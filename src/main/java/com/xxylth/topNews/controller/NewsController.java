@@ -67,8 +67,9 @@ public class NewsController
             comment.setStatus(0);
             comment.setContent(content);
 
-            newsService.
             commentService.addComment(comment);
+            newsService.updateCommentCount(commentService.getCommentCount(newsId,EntityType.ENTITY_NEWS),newsId);
+
         }
         catch (Exception e)
         {
@@ -96,15 +97,13 @@ public class NewsController
             //添加评论信息
             List<Comment> list=commentService.selectByEntity(newsId, EntityType.ENTITY_NEWS);
             List<ViewObject> commenVOs=new ArrayList<>();
-            for (Comment coment:list)
-            {
-                ViewObject vo=new ViewObject();
-                vo.set("comment",coment);
-                vo.set("user",userService.getUser(coment.getUserId()));
+            for (Comment coment:list) {
+                ViewObject vo = new ViewObject();
+                vo.set("comment", coment);
+                vo.set("user", userService.getUser(coment.getUserId()));
                 commenVOs.add(vo);
 
             }
-            System.out.println(commenVOs.size());
             model.addAttribute("comments",commenVOs);
             //添加新闻信息,发布人信息
             User owner=userService.getUser(news.getUserId());

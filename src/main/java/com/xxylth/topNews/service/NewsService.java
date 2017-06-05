@@ -29,6 +29,11 @@ public class NewsService
     public static String IMAGE_DIR="/Users/XXY/TopNews_image/";
 
 
+
+    public  int updateCommentCount(int commentCount,int id)
+    {
+        return newsDao.updateCommentCount(commentCount,id);
+    }
     /**
      * 根据newsId获取新闻
      *

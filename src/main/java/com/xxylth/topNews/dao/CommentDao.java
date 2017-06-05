@@ -2,10 +2,7 @@ package com.xxylth.topNews.dao;
 
 import com.xxylth.topNews.model.Comment;
 import com.xxylth.topNews.model.LoginTicket;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -40,7 +37,7 @@ public interface CommentDao
      * @param entityType   //实体类别
      * @return  指定实体的所有评论
      */
-    @Select({"select ",SELECT_FIELD," from ",TABLE_NAME,"where entity_id=#{entityId} and entity_type=#{entityType} order by id desc"})
+    @Select({"select ",SELECT_FIELD," from ",TABLE_NAME,"where entity_id=#{entityId} and entity_type=#{entityType} order by id asc"})
     List<Comment> selectByEntity(@Param("entityId") int entityId,
                                  @Param("entityType") int entityType);
 
@@ -54,6 +51,13 @@ public interface CommentDao
     @Select({"select count(id) from ",TABLE_NAME," where entity_id=#{entityId} and entity_type=#{entityType} "})
     int getCommentCount(@Param("entityId") int entityId,
                                  @Param("entityType") int entityType);
+
+
+
+    @Update({"update ",TABLE_NAME," set status=#{status} where entity_id=#{entityId} and entity_type=#{entityType}"})
+    int updateStatus(@Param("entityId") int entityId,
+                            @Param("entityType")int entityType,
+                            int status);
 }
 
 
