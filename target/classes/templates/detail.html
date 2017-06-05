@@ -10,8 +10,8 @@
                 </div>
 
                 <div class="content" data-url="http://nowcoder.com/posts/5l3hjr">
-                      <div class="content-img">
-                          <img src="$!{news.image}" alt="">
+                      <div >
+                          <img class="content-img" src="$!{news.image}" alt="">
                       </div>
                       <div class="content-main">
                           <h3 class="title">
@@ -83,9 +83,10 @@
             </div>
 
             <div id="comments" class="comments">
+
                 #foreach($commentvo in $comments)
                 <div class="media">
-                    <a class="media-left" href="http://nowcoder.com/u/210176">
+                    <a class="media-left" href="/user/$!{commentvo.user.id}">
                         <img src="$!{commentvo.user.headUrl}">
                     </a>
                     <div class="media-body">
@@ -94,6 +95,7 @@
                     </div>
                 </div>
                 #end
+
             </div>
 
         </div>

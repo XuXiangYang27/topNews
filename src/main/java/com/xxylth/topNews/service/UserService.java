@@ -95,7 +95,13 @@ public class UserService
             map.put("msgpwd","密码不能为空");
             return map;
         }
-        User user=userDao.selectByName(username);
+        User user=null;
+                user=userDao.selectByName(username);
+        if(user==null)
+        {
+            map.put("msgname", "用户名不存在");
+            return  map;
+        }
         if(!TopNewsUtil.MD5(password+user.getSalt()).equals(user.getPassword()))
         {
             map.put("msgpwd", "密码错误");

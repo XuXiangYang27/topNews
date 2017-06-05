@@ -1,11 +1,14 @@
 package com.xxylth.topNews;
 
+import com.xxylth.topNews.dao.CommentDao;
 import com.xxylth.topNews.dao.LoginTicketDao;
 import com.xxylth.topNews.dao.NewsDao;
 import com.xxylth.topNews.dao.UserDao;
+import com.xxylth.topNews.model.Comment;
 import com.xxylth.topNews.model.LoginTicket;
 import com.xxylth.topNews.model.News;
 import com.xxylth.topNews.model.User;
+import org.apache.velocity.runtime.directive.Foreach;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -31,7 +35,8 @@ public class InitDatabaseTests
 	NewsDao newsDao;
 	@Autowired
 	LoginTicketDao loginTicketDao;
-
+	@Autowired
+	CommentDao commentDao;
 
 	@Test
 	public void initData()
@@ -68,6 +73,15 @@ public class InitDatabaseTests
 			ticket.setTicket(String.format("TICKET%d",i+1));
 			loginTicketDao.addTicket(ticket);
 
+
+			Comment comment=new Comment();
+			comment.setUserId(12);
+			comment.setCreatedDate(new Date());
+			comment.setContent("test");
+			comment.setStatus(0);
+			comment.setEntityId(1);
+			comment.setEntityType(1);
+			commentDao.addComment(comment);
 		}
 		LoginTicket ticket;
 		ticket=loginTicketDao.selectByTicket("TICKET2");
@@ -83,7 +97,9 @@ public class InitDatabaseTests
 
 
 
-
+		List<Comment> list=commentDao.selectByEntity(1,1);
+		System.out.println(list.size());
+		System.out.println(commentDao.getCommentCount(1,1));
 	}
 }
 

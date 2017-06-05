@@ -1,22 +1,27 @@
 package com.xxylth.topNews.controller;
 
-import com.xxylth.topNews.model.HostHolder;
-import com.xxylth.topNews.model.News;
-import com.xxylth.topNews.model.User;
+import ch.qos.logback.core.net.SyslogOutputStream;
+import com.xxylth.topNews.dao.UserDao;
+import com.xxylth.topNews.model.*;
+import com.xxylth.topNews.service.CommentService;
 import com.xxylth.topNews.service.NewsService;
 import com.xxylth.topNews.service.QiniuService;
+import com.xxylth.topNews.service.UserService;
 import com.xxylth.topNews.util.TopNewsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author 许湘扬
@@ -32,10 +37,83 @@ public class NewsController
     private NewsService newsService;
     @Autowired
     private HostHolder hostHolder;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private CommentService commentService;
 
     private static final Logger LOGGER= LoggerFactory.getLogger(NewsController.class);
 
 
+    /**
+     * 添加一条评论
+     *
+     * @param newsId  //新闻ID
+     * @param content //评论内容
+     * @return
+     */
+    @RequestMapping(path={"/addComment"},method ={RequestMethod.POST})
+    public String addComment(@RequestParam("newsId") int newsId,
+                            @RequestParam("content") String content)
+    {
+        Comment comment=new Comment();
+
+        try
+        {
+            comment.setCreatedDate(new Date());
+            comment.setEntityId(newsId);
+            comment.setEntityType(EntityType.ENTITY_NEWS);
+            comment.setUserId(hostHolder.getUser().getId());
+            comment.setStatus(0);
+            comment.setContent(content);
+
+            newsService.
+            commentService.addComment(comment);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("添加评论失败!"+e.getMessage());
+        }
+
+        return "redirect:/news/"+newsId;
+    }
+    /**
+     * 获取新闻详情
+     *
+     * @param newsId //新闻ID号
+     * @param model  //交互参数
+     * @return //详情页
+     */
+    @RequestMapping(path={"/news/{newsId}"},method ={RequestMethod.GET})
+    public String newDetial(@PathVariable("newsId") int newsId,
+                          Model model)
+    {
+        News news= null;
+        news=newsService.getById(newsId);
+
+        if (news!=null)
+        {
+            //添加评论信息
+            List<Comment> list=commentService.selectByEntity(newsId, EntityType.ENTITY_NEWS);
+            List<ViewObject> commenVOs=new ArrayList<>();
+            for (Comment coment:list)
+            {
+                ViewObject vo=new ViewObject();
+                vo.set("comment",coment);
+                vo.set("user",userService.getUser(coment.getUserId()));
+                commenVOs.add(vo);
+
+            }
+            System.out.println(commenVOs.size());
+            model.addAttribute("comments",commenVOs);
+            //添加新闻信息,发布人信息
+            User owner=userService.getUser(news.getUserId());
+            model.addAttribute("news", news);
+            model.addAttribute("owner",owner);
+
+        }
+        return "detail";
+    }
     /**
      * 发布一条新闻
      *

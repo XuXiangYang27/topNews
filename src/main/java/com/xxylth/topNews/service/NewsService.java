@@ -30,6 +30,16 @@ public class NewsService
 
 
     /**
+     * 根据newsId获取新闻
+     *
+     * @param newsId //新闻ID
+     * @return //新闻bean
+     */
+    public News getById(int newsId)
+    {
+        return newsDao.getById(newsId);
+    }
+    /**
      * 添加一条新的新闻
      *
      * @param news //新闻bean
