@@ -37,6 +37,20 @@ public class MessageController
     private UserService userService;
 
 
+    @RequestMapping(path = {"/msg/list"}, method = {RequestMethod.GET})
+    public String conversationList(Model model,
+                                     @RequestParam("conversationId") String conversationId)
+    {
+        try
+        {
+
+        }catch (Exception e)
+        {
+            LOGGER.error("获取站内信列表失败"+e.getMessage());
+        }
+        return "letter";
+    }
+
     @RequestMapping(path = {"/msg/detail"}, method = {RequestMethod.GET})
     public String conversationDetail(Model model,
                                      @RequestParam("conversationId") String conversationId)

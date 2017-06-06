@@ -19,6 +19,18 @@ public class MessageService
     private MessageDao messageDao;
 
 
+    /**
+     * 获取每个用户的最新对话 与 对话总数
+     * @param userId
+     * @param offset
+     * @param limit
+     * @return
+     */
+    public com.sun.tools.javac.util.List<Message> getConversationList(int userId, int offset,int limit)
+    {
+        return messageDao.getConversationList(userId,offset,limit);
+    }
+
     public List<Message> getConversationDetail(String conversationId, int offset, int limit) {
         // conversation的总条数存在id里
         return messageDao.getConversationDetail(conversationId, offset, limit);
