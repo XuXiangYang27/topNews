@@ -1,6 +1,7 @@
 package com.xxylth.topNews.controller;
 
 import com.xxylth.topNews.dao.MessageDao;
+import com.xxylth.topNews.model.HostHolder;
 import com.xxylth.topNews.model.Message;
 import com.xxylth.topNews.model.User;
 import com.xxylth.topNews.model.ViewObject;
@@ -35,14 +36,19 @@ public class MessageController
     private MessageService messageService;
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private HostHolder hostHolder;
 
     @RequestMapping(path = {"/msg/list"}, method = {RequestMethod.GET})
-    public String conversationList(Model model,
-                                     @RequestParam("conversationId") String conversationId)
+    public String conversationList(Model model)
     {
         try
         {
+            int hostUserId= hostHolder.getUser().getId();
+
+            List<ViewObject> conservations=new ArrayList<>();
+
+
 
         }catch (Exception e)
         {

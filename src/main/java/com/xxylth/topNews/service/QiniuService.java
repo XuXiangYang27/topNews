@@ -37,8 +37,6 @@ public class QiniuService
     Configuration cfg=new Configuration(Zone.zone2());
     UploadManager uploadManager =new UploadManager(cfg) ;
 
-
-
     //简单上传，使用默认策略，只需要设置上传的空间名就可以了
     public String getUpToken() {
         return auth.uploadToken(bucketname);
