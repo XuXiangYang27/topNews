@@ -85,9 +85,7 @@ public class LoginController
             {
 
                 Cookie cookie=new Cookie("ticket",map.get("ticket").toString());
-                System.out.println(username);
-                System.out.println(password);
-                System.out.println(rember);
+
                 cookie.setPath("/");//设置cookie全站有效
                 if(rember>0)//如果勾选记住我,cookie设置为5天
                     cookie.setMaxAge(3600*24*5);

@@ -38,16 +38,39 @@ public class MessageController
     private UserService userService;
     @Autowired
     private HostHolder hostHolder;
-
+    /**
+     * 获取对话列表
+     *
+     * @param model
+     * @return 渲染letter页面
+     */
     @RequestMapping(path = {"/msg/list"}, method = {RequestMethod.GET})
     public String conversationList(Model model)
     {
         try
         {
+            //得到当前登录用户的Id和与之最新的对话list
             int hostUserId= hostHolder.getUser().getId();
+            List<ViewObject> conversations=new ArrayList<>();
+            List<Message> conversationList=messageService.getConversationList(hostUserId,0,10);
 
-            List<ViewObject> conservations=new ArrayList<>();
 
+            System.out.println(conversationList.size());
+            //把list<message>和对方双方的信息封装 到list<ViewObject>中
+            for(Message message:conversationList)
+            {
+                ViewObject vo=new ViewObject();
+                vo.set("conversation",message);
+
+                int toId=message.getToId();
+                int fromId=message.getFromId();
+                int targetId=hostUserId==toId?fromId:toId;//选择对方为targetId
+
+                User targetUser=userService.getUser(targetId);
+                vo.set("target",targetUser);
+                conversations.add(vo);
+            }
+            model.addAttribute("conversations",conversations);
 
 
         }catch (Exception e)

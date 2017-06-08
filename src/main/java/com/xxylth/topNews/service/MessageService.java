@@ -26,7 +26,7 @@ public class MessageService
      * @param limit
      * @return
      */
-    public com.sun.tools.javac.util.List<Message> getConversationList(int userId, int offset,int limit)
+    public List<Message> getConversationList(int userId, int offset,int limit)
     {
         return messageDao.getConversationList(userId,offset,limit);
     }
