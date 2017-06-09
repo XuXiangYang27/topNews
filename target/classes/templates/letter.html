@@ -19,16 +19,20 @@
                         </div>
                     </div>
                     <div class="chat-headbox">
+
+                        #if( $!{conversation.unreadCount})
                         <span class="msg-num">
                             $!{conversation.unreadCount}
                         </span>
-                        <a class="list-head" href="/user/$!{conversation.target.userId}">
+                        #end
+
+                        <a class="list-head" href="/user/$!{conversation.target.id}">
                             <img alt="头像" src="$!{conversation.target.headUrl}">
                         </a>
                     </div>
                     <div class="letter-detail">
-                        <a title="$!{conversation.userName}" class="letter-name level-color-1">
-                            $!{conversation.target.userName}
+                        <a title="$!{conversation.name}" class="letter-name level-color-1">
+                             $!{conversation.target.name}
                         </a>
                         <p class="letter-brief">
                             <a href="/msg/detail?conversationId=$!{conversation.conversation.conversationId}">

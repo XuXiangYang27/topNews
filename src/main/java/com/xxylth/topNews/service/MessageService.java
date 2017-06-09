@@ -45,4 +45,16 @@ public class MessageService
     {
         return messageDao.addMessage(message);
     }
+
+
+    /**
+     * 得到当前用户与某一个人的
+     * @param userId
+     * @param conversationId
+     * @return
+     */
+    public int getConversationUnreadCount(int userId, String conversationId)
+    {
+        return messageDao.getConversationUnreadCount(userId,conversationId);
+    }
 }

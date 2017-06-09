@@ -59,15 +59,26 @@ public class MessageController
             //把list<message>和对方双方的信息封装 到list<ViewObject>中
             for(Message message:conversationList)
             {
+                //1 ----------向vo中保存最近那条对话--------
                 ViewObject vo=new ViewObject();
                 vo.set("conversation",message);
 
-                int toId=message.getToId();
+
+                //2 ----------向vo中保存目标用户--------
+                int toId=message.getToId();//最新对话的 通信双方ID号
                 int fromId=message.getFromId();
                 int targetId=hostUserId==toId?fromId:toId;//选择对方为targetId
-
+                //target代表对话的对方用户
                 User targetUser=userService.getUser(targetId);
                 vo.set("target",targetUser);
+
+                //3 ----------向vo中保存消息未读数--------
+                String conversationId=toId<fromId ? toId+"_"+fromId:fromId+"_"+toId;
+                int unreadCount=messageService.getConversationUnreadCount(hostUserId,conversationId);
+
+                if (unreadCount>0)
+                     vo.set("unreadCount",unreadCount);
+
                 conversations.add(vo);
             }
             model.addAttribute("conversations",conversations);
