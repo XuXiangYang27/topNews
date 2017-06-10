@@ -18,7 +18,6 @@ public interface CommentDao
     String INSERT_FIELD=" content,user_id,entity_id,entity_type,created_date,status ";
     String SELECT_FIELD=" id, "+INSERT_FIELD;
 
-
     /**
      * 增加一条评论
      *
