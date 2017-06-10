@@ -29,7 +29,10 @@ public class NewsService
     public static String IMAGE_DIR="/Users/XXY/TopNews_image/";
 
 
-
+    public int updateLikeCount(int  liekeCount, int id)
+    {
+        return newsDao.updateLikeCount(liekeCount,  id);
+    }
     public  int updateCommentCount(int commentCount,int id)
     {
         return newsDao.updateCommentCount(commentCount,id);

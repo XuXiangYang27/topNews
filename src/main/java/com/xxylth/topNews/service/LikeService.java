@@ -38,20 +38,38 @@ public class LikeService
     /**
      * 给某个实体添加一个赞
      * @param userId      //点赞人ID号
-     * @param entityType  //
-     * @param entityId
-     * @return
+     * @param entityType  //实体类型
+     * @param entityId    //实体id号
+     * @return   //返回实体的点赞数
      */
     public long like(int userId,int entityType,int entityId )
     {
-        String likeKey= RedisKeyUtil.getLikeKey(entityType,entityId);
-
         //给指定实体添加一个喜欢的
+        String likeKey= RedisKeyUtil.getLikeKey(entityType,entityId);
         jedisAdapter.sadd(likeKey,String.valueOf(userId));
 
         //取消用户对实体的dislike
-        jedisAdapter.srem(likeKey,String.valueOf(userId));
+        String disliksKey=RedisKeyUtil.getDisLikeKey(entityType,entityId);
+        jedisAdapter.srem(disliksKey,String.valueOf(userId));
+        //返回实体点赞总数
         return jedisAdapter.scard(likeKey);
+    }
+
+
+    public long disLike(int userId,int entityType,int entityId )
+    {
+        //添加用户对实体的dislike
+        String disliksKey=RedisKeyUtil.getDisLikeKey(entityType,entityId);
+        jedisAdapter.sadd(disliksKey,String.valueOf(userId));
+
+        //取消用户对实体的like
+        String liksKey=RedisKeyUtil.getLikeKey(entityType,entityId);
+        jedisAdapter.srem(liksKey,String.valueOf(userId));
+
+
+        //返回实体点踩总数
+        return jedisAdapter.scard(disliksKey);
+
     }
 }
 
