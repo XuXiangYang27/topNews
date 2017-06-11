@@ -16,6 +16,8 @@ public class LikeService
     @Autowired
     private JedisAdapter jedisAdapter;
 
+
+
     /**
      * 如果喜欢返回1,如果不喜欢返回-1,否则返回0
      * @param userId
@@ -46,8 +48,8 @@ public class LikeService
     {
         //给指定实体添加一个喜欢的
         String likeKey= RedisKeyUtil.getLikeKey(entityType,entityId);
-        jedisAdapter.sadd(likeKey,String.valueOf(userId));
-
+        System.out.println(jedisAdapter.sadd(likeKey,String.valueOf(userId)));
+        System.out.println(jedisAdapter.scard(likeKey));
         //取消用户对实体的dislike
         String disliksKey=RedisKeyUtil.getDisLikeKey(entityType,entityId);
         jedisAdapter.srem(disliksKey,String.valueOf(userId));
@@ -56,6 +58,13 @@ public class LikeService
     }
 
 
+    /**
+     * 对 实体 取消赞
+     * @param userId
+     * @param entityType
+     * @param entityId
+     * @return //返回实体的最新点赞数
+     */
     public long disLike(int userId,int entityType,int entityId )
     {
         //添加用户对实体的dislike
@@ -66,9 +75,10 @@ public class LikeService
         String liksKey=RedisKeyUtil.getLikeKey(entityType,entityId);
         jedisAdapter.srem(liksKey,String.valueOf(userId));
 
+        //更新数据库的
 
         //返回实体点踩总数
-        return jedisAdapter.scard(disliksKey);
+        return jedisAdapter.scard(liksKey);
 
     }
 }

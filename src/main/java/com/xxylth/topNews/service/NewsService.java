@@ -29,6 +29,14 @@ public class NewsService
     public static String IMAGE_DIR="/Users/XXY/TopNews_image/";
 
 
+
+    /**
+     * 增加like数
+     *
+     * @param liekeCount  //最新的like数
+     * @param id          //实体ID号
+     * @return
+     */
     public int updateLikeCount(int  liekeCount, int id)
     {
         return newsDao.updateLikeCount(liekeCount,  id);

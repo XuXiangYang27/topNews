@@ -97,10 +97,12 @@ public class NewsController
             //添加评论信息
             List<Comment> list=commentService.selectByEntity(newsId, EntityType.ENTITY_NEWS);
             List<ViewObject> commenVOs=new ArrayList<>();
-            for (Comment coment:list) {
+            for (Comment coment:list)
+            {
                 ViewObject vo = new ViewObject();
                 vo.set("comment", coment);
                 vo.set("user", userService.getUser(coment.getUserId()));
+
                 commenVOs.add(vo);
 
             }
@@ -108,6 +110,7 @@ public class NewsController
             //添加新闻信息,发布人信息
             User owner=userService.getUser(news.getUserId());
             model.addAttribute("news", news);
+            model.addAttribute("like",news.getLikeCount());
             model.addAttribute("owner",owner);
 
         }

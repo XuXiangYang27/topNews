@@ -44,6 +44,7 @@ public class HomeController
             ViewObject vo=new ViewObject();
             vo.set("news",news);
             vo.set("user", userService.getUser(news.getUserId()));
+            vo.set("like",news.getLikeCount());
             vos.add(vo);
         }
         return vos;

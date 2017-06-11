@@ -70,14 +70,14 @@ public class MessageController
                 int targetId=hostUserId==toId?fromId:toId;//选择对方为targetId
                 //target代表对话的对方用户
                 User targetUser=userService.getUser(targetId);
-                vo.set("target",targetUser);
+                vo.set("user",targetUser);
 
                 //3 ----------向vo中保存消息未读数--------
                 String conversationId=toId<fromId ? toId+"_"+fromId:fromId+"_"+toId;
                 int unreadCount=messageService.getConversationUnreadCount(hostUserId,conversationId);
 
                 if (unreadCount>0)
-                     vo.set("unreadCount",unreadCount);
+                     vo.set("unread",unreadCount);
 
                 conversations.add(vo);
             }
