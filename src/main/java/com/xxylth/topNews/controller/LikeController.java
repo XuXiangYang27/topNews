@@ -1,5 +1,8 @@
 package com.xxylth.topNews.controller;
 
+import com.xxylth.topNews.async.EventModel;
+import com.xxylth.topNews.async.EventProducer;
+import com.xxylth.topNews.async.EventType;
 import com.xxylth.topNews.model.EntityType;
 import com.xxylth.topNews.model.HostHolder;
 import com.xxylth.topNews.model.News;
@@ -32,6 +35,8 @@ public class LikeController
     private LikeService likeService;
     @Autowired
     private NewsService newsService;
+    @Autowired
+    private EventProducer eventProducer;
 
 
     @RequestMapping(path={"/like"},method ={RequestMethod.GET,RequestMethod.POST})
@@ -44,6 +49,13 @@ public class LikeController
         int userId=hostHolder.getUser().getId();
         long likeCount=likeService.like(userId, EntityType.ENTITY_NEWS,newId);
         newsService.updateLikeCount((int)likeCount,newId);
+
+        News news=newsService.getById(newId);
+
+        //加入事件队列
+        eventProducer.firstEvent(new EventModel(EventType.LIKE).setActorId(hostHolder.getUser().getId()).
+                setEntityType(EntityType.ENTITY_NEWS).setEntityId(newId).setEntityOwnerId(news.getUserId()));
+
         return TopNewsUtil.getJSONString(0,String.valueOf(likeCount));
 
     }

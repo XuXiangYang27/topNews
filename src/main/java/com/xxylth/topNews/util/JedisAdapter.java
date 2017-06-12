@@ -1,5 +1,6 @@
 package com.xxylth.topNews.util;
 
+import com.alibaba.fastjson.JSON;
 import com.xxylth.topNews.controller.IndexController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,8 @@ import redis.clients.jedis.BinaryClient;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Tuple;
+
+import java.util.List;
 
 /**
  * @author 许湘扬
@@ -22,6 +25,60 @@ public class JedisAdapter implements InitializingBean
     private JedisPool pool=null;
     private static final Logger LOGGER= LoggerFactory.getLogger(JedisAdapter.class);
 
+
+    public List<String> brpop(int timeout, String key) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.brpop(timeout, key);
+        } catch (Exception e) {
+            LOGGER.error("发生异常" + e.getMessage());
+            return null;
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
+
+    public long lpush(String key, String value) {
+        Jedis jedis = null;
+        try
+        {
+            jedis = pool.getResource();
+            return jedis.lpush(key, value);
+        } catch (Exception e)
+        {
+             LOGGER.error("发生异常" + e.getMessage());
+            return 0;
+        }
+        finally
+        {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
+    public JedisAdapter()
+    {
+        pool=new JedisPool();
+    }
+
+    public void setObject(String key,Object obj)
+    {
+        set(key, JSON.toJSONString(obj));//把对象序列化成一个json对象
+    }
+    public <T> T getObject(String key,Class<T> clazz)
+    {
+        String value=get(key);
+        if (value!=null)
+        {
+            return JSON.parseObject(value,clazz);
+        }
+        return null;
+    }
 
     /**
      * 往set中添加value(即:往实体添加点赞人ID号)
@@ -46,7 +103,6 @@ public class JedisAdapter implements InitializingBean
                 jedis.close();
         }
     }
-
     public  long srem(String key,String value)
     {
         Jedis jedis=null;
@@ -85,7 +141,6 @@ public class JedisAdapter implements InitializingBean
                 jedis.close();
         }
     }
-
     /**
      * 返回新闻点赞数
      * @param key   //新闻
@@ -117,6 +172,42 @@ public class JedisAdapter implements InitializingBean
         return pool.getResource();
     }
 
+    public String get(String key)
+    {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return getJedis().get(key);
+        } catch (Exception e) {
+            LOGGER.error("发生异常" + e.getMessage());
+            return null;
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
+    public void set(String key, String value)
+    {
+        Jedis jedis = null;
+        try
+        {
+            jedis = pool.getResource();
+            jedis.set(key, value);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("发生异常" + e.getMessage());
+        }
+        finally
+        {
+            if (jedis != null)
+            {
+                jedis.close();
+            }
+        }
+    }
 
     /*
      * jedis 基本操作
