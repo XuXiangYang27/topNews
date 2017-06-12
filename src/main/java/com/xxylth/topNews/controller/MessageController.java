@@ -115,6 +115,9 @@ public class MessageController
 
             }
             model.addAttribute("messages",messages);
+
+            //更新消息为已读状态
+            messageService.updateMessageHasRead(conversationId);
         }
         catch (Exception e)
         {

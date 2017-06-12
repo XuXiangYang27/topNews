@@ -2,10 +2,8 @@ package com.xxylth.topNews.dao;
 
 
 import com.xxylth.topNews.model.Message;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+
 import java.util.List;
 
 @Mapper
@@ -36,4 +34,9 @@ public interface MessageDao
             "where conversation_id=#{conversationId} and to_id=#{userId} and has_read=0 "})
     int getConversationUnreadCount(@Param("userId") int userId,
                                    @Param("conversationId") String conversationId);
+
+
+    //更新has_read为已读
+    @Update({"update ",TABLE_NAME," set has_read=1 where conversation_id=#{conversationId}"})
+    int updateMessageHasRead(@Param("conversationId") String conversationId);
 }

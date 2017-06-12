@@ -58,5 +58,14 @@ public class MessageService
         return messageDao.getConversationUnreadCount(userId,conversationId);
     }
 
-
+    /**
+     * 把指定conversation_id标记为已读
+     *
+     * @param conversationId
+     * @return
+     */
+    public int updateMessageHasRead( String conversationId)
+    {
+        return messageDao.updateMessageHasRead(conversationId);
+    }
 }
