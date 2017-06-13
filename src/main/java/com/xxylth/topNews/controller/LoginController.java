@@ -1,6 +1,9 @@
 package com.xxylth.topNews.controller;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
+import com.xxylth.topNews.async.EventModel;
+import com.xxylth.topNews.async.EventProducer;
+import com.xxylth.topNews.async.EventType;
 import com.xxylth.topNews.model.User;
 import com.xxylth.topNews.service.NewsService;
 import com.xxylth.topNews.service.TopNewsService;
@@ -32,6 +35,9 @@ public class LoginController
     @Autowired
     NewsService newsService;
 
+    @Autowired
+    EventProducer eventProducer;
+
     private static final Logger LOGGER= LoggerFactory.getLogger(IndexController.class);
 
     @RequestMapping(path = {"/reg/"})//设置访问路径
@@ -55,6 +61,7 @@ public class LoginController
                 if(rember>0)//如果勾选记住我,cookie设置为5天
                     cookie.setMaxAge(3600*24*5);
                 response.addCookie(cookie);
+
                 return TopNewsUtil.getJSONString(0, "注册成功");
             }
             else
@@ -90,6 +97,11 @@ public class LoginController
                 if(rember>0)//如果勾选记住我,cookie设置为5天
                     cookie.setMaxAge(3600*24*5);
                 response.addCookie(cookie);
+
+                //触发login事件
+                eventProducer.firstEvent(new EventModel(EventType.LOGIN).
+                        setActorId((int)map.get("userId")).setExt("username",username).
+                        setExt("userEmail","547139255@qq.com") );
                 return TopNewsUtil.getJSONString(0, "登录成功");
             }
             else

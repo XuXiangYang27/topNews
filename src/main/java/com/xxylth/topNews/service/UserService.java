@@ -112,6 +112,8 @@ public class UserService
         //登录
         //addLoginTicket(user.getId());是为指定用户添加一个ticket到数据库中
         String ticket=addLoginTicket(user.getId(),rember);
+        map.put("userId",user.getId());
+
         map.put("ticket",ticket);
 
         return map;

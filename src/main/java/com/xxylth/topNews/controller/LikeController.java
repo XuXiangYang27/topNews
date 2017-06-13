@@ -53,7 +53,7 @@ public class LikeController
         News news=newsService.getById(newId);
 
         //加入事件队列
-        eventProducer.firstEvent(new EventModel(EventType.LIKE).setActorId(hostHolder.getUser().getId()).
+        eventProducer.firstEvent(new EventModel().setActorId(hostHolder.getUser().getId()).
                 setEntityType(EntityType.ENTITY_NEWS).setEntityId(newId).setEntityOwnerId(news.getUserId()));
 
         return TopNewsUtil.getJSONString(0,String.valueOf(likeCount));

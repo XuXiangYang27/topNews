@@ -50,6 +50,7 @@ public class EventComsumer implements InitializingBean,ApplicationContextAware
         {
             for(Map.Entry<String,EventHandler> entry :beans.entrySet())
             {
+                System.out.println("1111111111111111111111111111"+entry.getValue().getClass().getName());
                 List<EventType > eventTypes=entry.getValue().getSupportEventTypes();
                 for (EventType type: eventTypes)
                 {
@@ -86,7 +87,9 @@ public class EventComsumer implements InitializingBean,ApplicationContextAware
 
                         if (!config.containsKey(eventModel.getType()))
                         {
+
                             logger.error("不能识别的事件");
+                            System.out.println(eventModel.getType());
                             continue;
                         }
 
